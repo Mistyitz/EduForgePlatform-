@@ -1,2 +1,2 @@
-# https://cdn.jsdelivr.net/gh/Mistyitz/EduForgePlatform-@main/app.svg
+# https://cdn.jsdelivr.net/gh/Mistyitz/EduForgePlatform-@main/Launch.svg
 
