@@ -1,1 +1,1 @@
-# https://cdn.jsdelivr.net/gh/Mistyitz/EduForgePlatform-@main/new.svg?v=1
+# https://cdn.jsdelivr.net/gh/Mistyitz/EduForgePlatform-@main/new.svg?v=2
