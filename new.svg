@@ -1,0 +1,183 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 1000 1000">
+  <foreignObject width="100%" height="100%">
+    <div xmlns="http://www.w3.org/1999/xhtml">
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>EduForge Platform</title>
+        <style>
+          * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+          body { background-color: #f8fafc; color: #1e293b; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; }
+          
+          /* Minimal Header */
+          header { width: 100%; max-width: 800px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+          .logo { font-size: 1.25rem; font-weight: 700; color: #2563eb; letter-spacing: -0.5px; }
+          .user-info { font-size: 0.9rem; color: #64748b; font-weight: 500; }
+          
+          /* Login &amp; Dashboard Card Containers */
+          .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 32px; width: 100%; max-width: 440px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+          h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 20px; color: #0f172a; }
+          
+          .form-group { margin-bottom: 16px; }
+          label { display: block; font-size: 0.85rem; font-weight: 500; color: #475569; margin-bottom: 6px; }
+          input { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
+          input:focus { border-color: #2563eb; }
+          
+          button { width: 100%; padding: 10px 16px; background-color: #2563eb; color: #ffffff; border: none; border-radius: 6px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s; margin-top: 8px; }
+          button:hover { background-color: #1d4ed8; }
+          
+          .error-msg { color: #dc2626; font-size: 0.85rem; margin-top: 12px; display: none; }
+          
+          /* Dashboard Grid */
+          #dashboard-section { display: none; width: 100%; max-width: 800px; }
+          .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 20px; }
+          
+          .class-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; text-align: left; cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; justify-content: space-between; height: 120px; text-decoration: none; color: inherit; }
+          .class-card:hover { border-color: #2563eb; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1); transform: translateY(-2px); }
+          .class-title { font-size: 1rem; font-weight: 600; color: #0f172a; }
+          .class-action { font-size: 0.8rem; font-weight: 600; color: #2563eb; }
+          
+          .logout-btn { background: transparent; color: #64748b; border: 1px solid #cbd5e1; width: auto; padding: 6px 12px; font-size: 0.85rem; margin: 0; }
+          .logout-btn:hover { background: #f1f5f9; color: #0f172a; }
+        </style>
+      </head>
+      <body>
+
+        <header>
+          <div class="logo">EduForge</div>
+          <div id="header-user" class="user-info"></div>
+        </header>
+
+        <!-- Login Form -->
+        <div id="login-card" class="card">
+          <h2>Student Login</h2>
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="e.g. Max" />
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="乁༼☯‿☯✿༽ㄏ" />
+          </div>
+          <button onclick="handleLogin()">Sign In</button>
+          <div id="error-msg" class="error-msg">Incorrect username or password.</div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard-section">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2>My Classes</h2>
+            <button class="logout-btn" onclick="logout()">Sign Out</button>
+          </div>
+          <div id="classes-grid" class="grid"></div>
+        </div>
+
+        <script><![CDATA[
+          const REPO_OWNER = "Mistyitz";
+          const REPO_NAME = "EduForgePlatform-";
+          const BRANCH = "main";
+
+          async function handleLogin() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorMsg = document.getElementById('error-msg');
+            
+            errorMsg.style.display = 'none';
+            if (!username || !password) return;
+
+            try {
+              const rawUserUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/EDU/${username}.html`;
+              const response = await fetch(rawUserUrl);
+              
+              if (!response.ok) throw new Error("User file not found");
+
+              const htmlText = await response.text();
+              const parser = new DOMParser();
+              const doc = parser.parseFromString(htmlText, 'text/html');
+
+              const realPassword = doc.getElementById('password')?.textContent.trim();
+
+              if (realPassword === password) {
+                document.getElementById('login-card').style.display = 'none';
+                document.getElementById('dashboard-section').style.display = 'block';
+                document.getElementById('header-user').textContent = username;
+
+                renderClasses(doc);
+              } else {
+                errorMsg.style.display = 'block';
+              }
+            } catch (err) {
+              errorMsg.style.display = 'block';
+            }
+          }
+
+          function renderClasses(doc) {
+            const grid = document.getElementById('classes-grid');
+            grid.innerHTML = '';
+
+            const classLinks = doc.querySelectorAll('#classes a');
+
+            if (classLinks.length === 0) {
+              grid.innerHTML = '<p style="color:#64748b;">No assigned classes found.</p>';
+              return;
+            }
+
+            classLinks.forEach(link => {
+              const title = link.textContent.trim();
+              let rawHref = link.getAttribute('href');
+
+              let rawUrl = rawHref;
+              if (rawHref.includes('github.com')) {
+                rawUrl = rawHref
+                  .replace('github.com', 'raw.githubusercontent.com')
+                  .replace('/blob/', '/');
+              } else if (!rawHref.startsWith('http')) {
+                rawUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${rawHref}`;
+              }
+
+              const card = document.createElement('div');
+              card.className = 'class-card';
+              card.innerHTML = `
+                <div class="class-title">${title}</div>
+                <div class="class-action">Open Lesson ↗</div>
+              `;
+              card.onclick = () => openClassInAboutBlank(rawUrl);
+              grid.appendChild(card);
+            });
+          }
+
+          async function openClassInAboutBlank(rawUrl) {
+            try {
+              const response = await fetch(rawUrl);
+              if (!response.ok) throw new Error("Could not fetch class file");
+
+              const code = await response.text();
+
+              const win = window.open('about:blank', '_blank');
+              if (win) {
+                win.document.open();
+                win.document.write(code);
+                win.document.close();
+              } else {
+                alert("Popup blocked! Please allow popups for this site.");
+              }
+            } catch (err) {
+              alert("Failed to load class code from repository.");
+            }
+          }
+
+          function logout() {
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('dashboard-section').style.display = 'none';
+            document.getElementById('login-card').style.display = 'block';
+            document.getElementById('header-user').textContent = '';
+          }
+        ]]></script>
+      </body>
+      </html>
+    </div>
+  </foreignObject>
+</svg>
