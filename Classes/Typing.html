@@ -1,1 +1,1157 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Touch Typing Master - Learn to Type Fast without Looking</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        finger: {
+                            lpinky: '#f87171', // Left Pinky (Red)
+                            lring: '#fb923c',  // Left Ring (Orange)
+                            lmiddle: '#facc15',// Left Middle (Yellow)
+                            lindex: '#4ade80', // Left Index (Green)
+                            rindex: '#38bdf8', // Right Index (Cyan)
+                            rmiddle: '#818cf8',// Right Middle (Indigo)
+                            rring: '#c084fc',  // Right Ring (Purple)
+                            rpinky: '#f472b6', // Right Pinky (Pink)
+                            thumb: '#94a3b8'   // Thumbs (Slate)
+                        }
+                    },
+                    animation: {
+                        'shake': 'shake 0.2s cubic-bezier(.36,.07,.19,.97) both',
+                        'pulse-glow': 'pulseGlow 1.5s infinite ease-in-out',
+                    },
+                    keyframes: {
+                        shake: {
+                            '10%, 90%': { transform: 'translate3d(-1px, 0, 0)' },
+                            '20%, 80%': { transform: 'translate3d(2px, 0, 0)' },
+                            '30%, 50%, 70%': { transform: 'translate3d(-4px, 0, 0)' },
+                            '40%, 60%': { transform: 'translate3d(4px, 0, 0)' }
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 15px rgba(59, 130, 246, 0.6)' },
+                            '50%': { boxShadow: '0 0 25px rgba(59, 130, 246, 0.9)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .font-mono-code {
+            font-family: 'Fira Code', monospace;
+        }
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.5);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(107, 114, 128, 0.8);
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col transition-colors duration-200">
+
+    <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="app.showDashboard()">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2h4zm0 0R11 4h6a2 2 0 012 2v14a2 2 0 01-2 2h-6M11 4v16M15 8h2m-2 4h2m-2 4h2"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg tracking-tight text-white flex items-center gap-2">
+                        TypeMaster <span class="text-xs font-semibold px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">Pro</span>
+                    </h1>
+                    <p class="text-xs text-slate-400 hidden sm:block">Touch Typing Mastery Course</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <button id="btn-sound" onclick="app.toggleSound()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition flex items-center gap-1.5 text-xs font-medium" title="Toggle Sound">
+                    <span id="sound-icon">🔊</span>
+                    <span class="hidden sm:inline">Sound</span>
+                </button>
+                <button onclick="app.showCustomPractice()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-indigo-400 border border-indigo-500/30 text-xs font-semibold transition">
+                    ⚡ Custom Test
+                </button>
+                <div class="h-6 w-px bg-slate-800"></div>
+                <div class="text-right">
+                    <div class="text-xs text-slate-400">Completed</div>
+                    <div class="text-sm font-bold text-emerald-400" id="header-progress">0 / 52</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col">
+        
+        <!-- DASHBOARD VIEW -->
+        <section id="view-dashboard" class="space-y-8">
+            <!-- Hero Banner -->
+            <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-900/60 via-slate-900 to-slate-900 border border-indigo-500/20 p-6 sm:p-8">
+                <div class="relative z-10 max-w-2xl">
+                    <span class="inline-block px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 mb-3">50+ Interactive Lessons</span>
+                    <h2 class="text-3xl sm:text-4xl font-black text-white tracking-tight mb-3">Master Touch Typing Without Looking Down</h2>
+                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
+                        Learn proper finger alignment starting from the resting Home Row positions (<span class="text-amber-400 font-semibold">F & J bumps</span>). Progress from 10 WPM novice to 80+ WPM expert typist.
+                    </p>
+                    <div class="flex flex-wrap items-center gap-4">
+                        <button id="btn-continue-lesson" onclick="app.continueLesson()" class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/30 transition transform active:scale-95 flex items-center gap-2">
+                            <span>Continue Learning</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </button>
+                        <button onclick="app.resetProgress()" class="px-4 py-3 rounded-xl bg-slate-800/80 hover:bg-red-900/30 text-slate-400 hover:text-red-400 border border-slate-700 hover:border-red-500/30 font-medium text-xs transition">
+                            Reset Progress
+                        </button>
+                    </div>
+                </div>
+                <!-- Stats Overlay -->
+                <div class="mt-6 sm:mt-0 grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-slate-800">
+                    <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
+                        <div class="text-xs text-slate-400">Current Rank</div>
+                        <div class="text-sm font-bold text-amber-400" id="stat-rank">Beginner</div>
+                    </div>
+                    <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
+                        <div class="text-xs text-slate-400">Best Speed</div>
+                        <div class="text-sm font-bold text-emerald-400" id="stat-best-wpm">0 WPM</div>
+                    </div>
+                    <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
+                        <div class="text-xs text-slate-400">Avg Accuracy</div>
+                        <div class="text-sm font-bold text-cyan-400" id="stat-avg-acc">0%</div>
+                    </div>
+                    <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
+                        <div class="text-xs text-slate-400">Total Stars</div>
+                        <div class="text-sm font-bold text-yellow-400" id="stat-stars">⭐ 0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage & Lesson Curriculum Grid -->
+            <div>
+                <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                    <span>Curriculum Overview</span>
+                    <span class="text-xs font-normal text-slate-400">(Complete lessons sequentially to unlock)</span>
+                </h3>
+                <div id="stages-container" class="space-y-6">
+                    <!-- Dynamic Stages Injected Here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- LESSON VIEW -->
+        <section id="view-lesson" class="hidden flex-1 flex flex-col space-y-6">
+            <!-- Top Controls & Lesson Title -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+                <div class="flex items-center space-x-3">
+                    <button onclick="app.showDashboard()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    </button>
+                    <div>
+                        <span id="lesson-stage-title" class="text-xs font-semibold uppercase tracking-wider text-indigo-400">Stage 1</span>
+                        <h2 id="lesson-title" class="text-xl font-bold text-white">Lesson Name</h2>
+                    </div>
+                </div>
+
+                <!-- Live Metrics -->
+                <div class="flex items-center gap-4 bg-slate-950 p-2.5 rounded-xl border border-slate-800 self-start sm:self-auto">
+                    <div class="text-center px-3 border-r border-slate-800">
+                        <div class="text-[10px] uppercase font-bold text-slate-400">Speed</div>
+                        <div class="text-lg font-extrabold text-indigo-400" id="live-wpm">0 <span class="text-xs font-normal text-slate-400">WPM</span></div>
+                    </div>
+                    <div class="text-center px-3 border-r border-slate-800">
+                        <div class="text-[10px] uppercase font-bold text-slate-400">Accuracy</div>
+                        <div class="text-lg font-extrabold text-emerald-400" id="live-accuracy">100%</div>
+                    </div>
+                    <div class="text-center px-3 border-r border-slate-800">
+                        <div class="text-[10px] uppercase font-bold text-slate-400">Errors</div>
+                        <div class="text-lg font-extrabold text-rose-400" id="live-errors">0</div>
+                    </div>
+                    <div class="text-center px-3">
+                        <div class="text-[10px] uppercase font-bold text-slate-400">Time</div>
+                        <div class="text-lg font-extrabold text-amber-400 font-mono-code" id="live-timer">00:00</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Finger & Rest Position Instructional Guide Banner -->
+            <div id="instruction-banner" class="bg-indigo-950/40 border border-indigo-500/30 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div class="flex items-start gap-3">
+                    <div class="p-2.5 bg-indigo-600/30 rounded-lg text-indigo-300 mt-0.5 sm:mt-0">
+                        💡
+                    </div>
+                    <div>
+                        <div class="font-semibold text-indigo-200 text-sm">Key Focus & Finger Placement</div>
+                        <p id="lesson-guide-text" class="text-xs text-indigo-300/80 mt-0.5 leading-relaxed">
+                            Rest left fingers on <b class="text-amber-300">A-S-D-F</b> and right fingers on <b class="text-amber-300">J-K-L-;</b>.
+                        </p>
+                    </div>
+                </div>
+                <div class="text-xs bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-700 text-slate-300 flex items-center gap-2 whitespace-nowrap">
+                    <span>Target Finger:</span>
+                    <span id="target-finger-badge" class="font-bold text-indigo-400">Left Index</span>
+                </div>
+            </div>
+
+            <div class="relative bg-slate-950 rounded-2xl border border-slate-800 p-6 sm:p-8 flex flex-col items-center justify-center min-h-[160px] shadow-inner select-none cursor-pointer" onclick="app.focusTypingInput()" id="typing-area">
+                <!-- Hidden real text input for mobile/desktop typing trigger -->
+                <input type="text" id="hidden-typing-input" class="absolute opacity-0 pointer-events-auto h-full w-full top-0 left-0 cursor-default" autocomplete="off" capitalize="off" spellcheck="false">
+
+                <div id="typing-prompt" class="text-xl sm:text-2xl md:text-3xl font-mono-code leading-relaxed text-slate-500 tracking-wider text-center flex flex-wrap justify-center items-center gap-x-1 gap-y-2 max-w-4xl">
+                    <!-- Text chars generated dynamically -->
+                </div>
+
+                <div id="start-prompt-overlay" class="mt-4 text-xs font-semibold text-slate-400 animate-pulse flex items-center gap-2">
+                    <span>Click here or start typing to begin lesson</span>
+                </div>
+            </div>
+
+            <!-- Dynamic On-Screen Keyboard & Hands Visualizer -->
+            <div class="space-y-4">
+                <!-- Visual Hands Diagram -->
+                <div class="flex justify-between max-w-2xl mx-auto px-4 text-xs font-medium text-slate-400">
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-2.5 h-2.5 rounded-full bg-slate-600"></span>
+                        <span>Left Hand (<span class="text-amber-400">A S D F</span>)</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <span>Right Hand (<span class="text-amber-400">J K L ;</span>)</span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-slate-600"></span>
+                    </div>
+                </div>
+
+                <!-- On-Screen Keyboard SVG/HTML Grid -->
+                <div id="keyboard-container" class="bg-slate-950 p-3 sm:p-5 rounded-2xl border border-slate-800 max-w-4xl mx-auto space-y-1.5 shadow-2xl">
+                    <!-- Row 1 -->
+                    <div class="flex justify-center gap-1 sm:gap-1.5">
+                        <div data-key="`" class="key key-lpinky">`</div>
+                        <div data-key="1" class="key key-lpinky">1</div>
+                        <div data-key="2" class="key key-lring">2</div>
+                        <div data-key="3" class="key key-lmiddle">3</div>
+                        <div data-key="4" class="key key-lindex">4</div>
+                        <div data-key="5" class="key key-lindex">5</div>
+                        <div data-key="6" class="key key-rindex">6</div>
+                        <div data-key="7" class="key key-rindex">7</div>
+                        <div data-key="8" class="key key-rmiddle">8</div>
+                        <div data-key="9" class="key key-rring">9</div>
+                        <div data-key="0" class="key key-rpinky">0</div>
+                        <div data-key="-" class="key key-rpinky">-</div>
+                        <div data-key="=" class="key key-rpinky">=</div>
+                        <div data-key="Backspace" class="key key-special w-16 text-[10px]">Backspace</div>
+                    </div>
+                    <!-- Row 2 -->
+                    <div class="flex justify-center gap-1 sm:gap-1.5">
+                        <div data-key="Tab" class="key key-special w-12 text-[10px]">Tab</div>
+                        <div data-key="q" class="key key-lpinky">Q</div>
+                        <div data-key="w" class="key key-lring">W</div>
+                        <div data-key="e" class="key key-lmiddle">E</div>
+                        <div data-key="r" class="key key-lindex">R</div>
+                        <div data-key="t" class="key key-lindex">T</div>
+                        <div data-key="y" class="key key-rindex">Y</div>
+                        <div data-key="u" class="key key-rindex">U</div>
+                        <div data-key="i" class="key key-rmiddle">I</div>
+                        <div data-key="o" class="key key-rring">O</div>
+                        <div data-key="p" class="key key-rpinky">P</div>
+                        <div data-key="[" class="key key-rpinky">[</div>
+                        <div data-key="]" class="key key-rpinky">]</div>
+                        <div data-key="\" class="key key-rpinky">\</div>
+                    </div>
+                    <!-- Row 3: Home Row with Tactile Bump Indicators -->
+                    <div class="flex justify-center gap-1 sm:gap-1.5">
+                        <div data-key="Caps" class="key key-special w-14 text-[10px]">Caps</div>
+                        <div data-key="a" class="key key-lpinky home-key">A</div>
+                        <div data-key="s" class="key key-lring home-key">S</div>
+                        <div data-key="d" class="key key-lmiddle home-key">D</div>
+                        <div data-key="f" class="key key-lindex home-key relative">F<span class="absolute bottom-1 w-2 h-0.5 bg-amber-400/80 rounded"></span></div>
+                        <div data-key="g" class="key key-lindex">G</div>
+                        <div data-key="h" class="key key-rindex">H</div>
+                        <div data-key="j" class="key key-rindex home-key relative">J<span class="absolute bottom-1 w-2 h-0.5 bg-amber-400/80 rounded"></span></div>
+                        <div data-key="k" class="key key-rmiddle home-key">K</div>
+                        <div data-key="l" class="key key-rring home-key">L</div>
+                        <div data-key=";" class="key key-rpinky home-key">;</div>
+                        <div data-key="'" class="key key-rpinky">'</div>
+                        <div data-key="Enter" class="key key-special w-16 text-[10px]">Enter</div>
+                    </div>
+                    <!-- Row 4 -->
+                    <div class="flex justify-center gap-1 sm:gap-1.5">
+                        <div data-key="ShiftLeft" class="key key-special w-20 text-[10px]">Shift</div>
+                        <div data-key="z" class="key key-lpinky">Z</div>
+                        <div data-key="x" class="key key-lring">X</div>
+                        <div data-key="c" class="key key-lmiddle">C</div>
+                        <div data-key="v" class="key key-lindex">V</div>
+                        <div data-key="b" class="key key-lindex">B</div>
+                        <div data-key="n" class="key key-rindex">N</div>
+                        <div data-key="m" class="key key-rindex">M</div>
+                        <div data-key="," class="key key-rmiddle">,</div>
+                        <div data-key="." class="key key-rring">.</div>
+                        <div data-key="/" class="key key-rpinky">/</div>
+                        <div data-key="ShiftRight" class="key key-special w-20 text-[10px]">Shift</div>
+                    </div>
+                    <!-- Row 5 -->
+                    <div class="flex justify-center gap-1 sm:gap-1.5">
+                        <div data-key=" " class="key key-thumb w-64 text-[10px]">Space</div>
+                    </div>
+                </div>
+
+                <!-- Color legend for finger zones -->
+                <div class="flex flex-wrap justify-center items-center gap-2 sm:gap-4 text-[11px] text-slate-400 pt-1">
+                    <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-red-400/40 border border-red-500"></span> L. Pinky</span>
+                    <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-orange-400/40 border border-orange-500"></span> L. Ring</span>
+                    <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-yellow-400/40 border border-yellow-500"></span> L. Middle</span>
+                    <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-green-400/40 border border-green-500"></span> L. Index</span>
+                    <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-cyan-400/40 border border-cyan-500"></span> R. Index</span>
+                    <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-indigo-400/40 border border-indigo-500"></span> R. Middle</span>
+                    <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-purple-400/40 border border-purple-500"></span> R. Ring</span>
+                    <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-pink-400/40 border border-pink-500"></span> R. Pinky</span>
+                </div>
+            </div>
+        </section>
+
+        <div id="modal-results" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-2xl relative animate-in fade-in zoom-in duration-200">
+                <div class="text-center space-y-2">
+                    <div id="res-badge" class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                        Lesson Completed
+                    </div>
+                    <h3 class="text-2xl font-black text-white" id="res-lesson-title">Lesson Evaluation</h3>
+                    <div class="text-3xl tracking-widest my-1" id="res-stars">⭐⭐⭐</div>
+                </div>
+
+                <!-- Rank & Score Cards -->
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-4">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+                        <span class="text-slate-400 text-xs uppercase font-bold">Assigned Skill Rank</span>
+                        <span class="text-indigo-400 font-extrabold text-sm" id="res-rank">Intermediate Typist</span>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-3 text-center">
+                        <div class="p-3 bg-slate-900 rounded-lg border border-slate-800">
+                            <div class="text-[10px] text-slate-400 uppercase font-semibold">Speed</div>
+                            <div class="text-xl font-black text-white" id="res-wpm">42 <span class="text-xs text-slate-500 font-normal">WPM</span></div>
+                        </div>
+                        <div class="p-3 bg-slate-900 rounded-lg border border-slate-800">
+                            <div class="text-[10px] text-slate-400 uppercase font-semibold">Accuracy</div>
+                            <div class="text-xl font-black text-emerald-400" id="res-acc">98%</div>
+                        </div>
+                        <div class="p-3 bg-slate-900 rounded-lg border border-slate-800">
+                            <div class="text-[10px] text-slate-400 uppercase font-semibold">Time</div>
+                            <div class="text-xl font-black text-amber-400 font-mono-code" id="res-time">00:45</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feedback Message -->
+                <div class="p-3.5 bg-indigo-950/40 rounded-xl border border-indigo-500/20 text-xs text-indigo-200 leading-relaxed" id="res-feedback">
+                    Great work! You demonstrated strong finger placement accuracy. Keep practicing to boost speed further.
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-3">
+                    <button onclick="app.retryLesson()" class="flex-1 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold transition">
+                        🔄 Retry Lesson
+                    </button>
+                    <button id="btn-next-lesson" onclick="app.nextLesson()" class="flex-1 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition shadow-lg shadow-indigo-600/30">
+                        Next Lesson ➔
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CUSTOM PRACTICE MODAL -->
+        <div id="modal-custom" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                    <h3 class="text-lg font-bold text-white">Custom Practice / Speed Test</h3>
+                    <button onclick="app.hideCustomPractice()" class="text-slate-400 hover:text-white">✕</button>
+                </div>
+                <p class="text-xs text-slate-400">Paste your own custom text or select a generated practice mode:</p>
+                <textarea id="custom-text-input" rows="5" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-slate-200 font-mono-code focus:outline-none focus:border-indigo-500" placeholder="Paste custom text here..."></textarea>
+                <div class="flex justify-end gap-2">
+                    <button onclick="app.hideCustomPractice()" class="px-4 py-2 rounded-lg bg-slate-800 text-slate-300 text-xs font-semibold">Cancel</button>
+                    <button onclick="app.startCustomLesson()" class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-xs font-semibold">Start Custom Test</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Styling for Keys and Hands -->
+    <style>
+        .key {
+            height: 2.75rem;
+            min-width: 2.25rem;
+            padding: 0 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            user-select: none;
+            transition: all 0.1s ease;
+            background-color: #1e293b;
+            color: #94a3b8;
+            border: 1px solid #334155;
+            box-shadow: 0 3px 0 #0f172a;
+        }
+
+        /* Color Coding Finger Zones */
+        .key-lpinky { border-bottom: 2px solid #f87171; }
+        .key-lring  { border-bottom: 2px solid #fb923c; }
+        .key-lmiddle{ border-bottom: 2px solid #facc15; }
+        .key-lindex { border-bottom: 2px solid #4ade80; }
+        .key-rindex { border-bottom: 2px solid #38bdf8; }
+        .key-rmiddle{ border-bottom: 2px solid #818cf8; }
+        .key-rring  { border-bottom: 2px solid #c084fc; }
+        .key-rpinky { border-bottom: 2px solid #f472b6; }
+        .key-thumb  { border-bottom: 2px solid #64748b; }
+        .key-special{ background-color: #0f172a; color: #64748b; }
+
+        /* Home row highlight */
+        .home-key {
+            background-color: #1e293b;
+            box-shadow: 0 3px 0 #0f172a, inset 0 0 0 1px rgba(245, 158, 11, 0.2);
+        }
+
+        /* Active Next Key Target Highlight */
+        .key.key-active {
+            background-color: #4f46e5 !important;
+            color: #ffffff !important;
+            border-color: #818cf8 !important;
+            box-shadow: 0 0 15px rgba(79, 70, 229, 0.8), 0 3px 0 #312e81 !important;
+            transform: translateY(-2px);
+            animation: pulseGlow 1.2s infinite ease-in-out;
+        }
+
+        /* Keystroke pressed state */
+        .key.key-pressed {
+            transform: translateY(2px);
+            box-shadow: 0 0 0 #0f172a;
+            background-color: #3730a3;
+        }
+
+        .key.key-error {
+            background-color: #e11d48 !important;
+            color: white !important;
+            border-color: #f43f5e !important;
+            box-shadow: 0 0 12px rgba(225, 29, 72, 0.8) !important;
+        }
+
+        /* Char status in prompt */
+        .char-correct {
+            color: #4ade80;
+            background-color: rgba(74, 222, 128, 0.1);
+            border-radius: 2px;
+        }
+        .char-wrong {
+            color: #f87171;
+            background-color: rgba(248, 113, 113, 0.25);
+            text-decoration: underline;
+            border-radius: 2px;
+        }
+        .char-current {
+            color: #ffffff;
+            background-color: #4f46e5;
+            border-radius: 3px;
+            box-shadow: 0 0 8px rgba(79, 70, 229, 0.8);
+            animation: pulseGlow 1s infinite alternate;
+        }
+    </style>
+
+    <script>
+        // 50+ Comprehensive Touch Typing Lessons Curriculum
+        const LESSON_STAGES = [
+            {
+                id: 1,
+                title: "Stage 1: Home Row & Rest Positions",
+                description: "Master rest finger positions on A S D F and J K L ; with tactile bumps on F and J.",
+                lessons: [
+                    { id: 1, name: "Home Keys: Index Fingers (F & J)", guide: "Place left index on F (feel tactile bump) and right index on J.", text: "ff jj ff jj fjfj jfjf fj fj jf jf fff jjj fff jjj" },
+                    { id: 2, name: "Home Keys: Middle Fingers (D & K)", guide: "Left middle finger on D, right middle finger on K.", text: "dd kk dd kk dkd0 dk dk kd kd ddd kkk ddd kkk dkkd kddk" },
+                    { id: 3, name: "Home Keys: Ring Fingers (S & L)", guide: "Left ring finger on S, right ring finger on L.", text: "ss ll ss ll sl sl ls ls sss lll sss lll slsl lsls" },
+                    { id: 4, name: "Home Keys: Pinky Fingers (A & ;)", guide: "Left pinky on A, right pinky on semicolon (;).", text: "aa ;; aa ;; a; a; ;a ;a aaa ;;; aaa ;;; a;a; ;a;a" },
+                    { id: 5, name: "Home Row Drill 1: Left Hand (A S D F)", guide: "Keep fingers anchored. Move only the target finger.", text: "asdf asdf fdsa fdsa asdf fdsa asdfa dsfa fads asdf" },
+                    { id: 6, name: "Home Row Drill 2: Right Hand (J K L ;)", guide: "Right hand home row anchor practice.", text: "jkl; jkl; ;lkj ;lkj jkl; ;lkj jklj lkjl ;jkl jkl;" },
+                    { id: 7, name: "Home Row Combined Integration", guide: "Combine both hands resting across all 8 home keys.", text: "asdf jkl; asdf jkl; fjdk sl a; fjdk sl a; a s d f j k l ;" },
+                    { id: 8, name: "Center Keys Extension (G & H)", guide: "Stretch left index to G, right index to H. Return to F and J immediately.", text: "fgf jhj fgf jhj gfhj hgfj fggj hhhf gfgf hjhj ghhg" }
+                ]
+            },
+            {
+                id: 2,
+                title: "Stage 2: Top Row Keys",
+                description: "Reach upward from Home Row to Q W E R T and Y U I O P.",
+                lessons: [
+                    { id: 9, name: "Top Row: Index Reaches (R & U)", guide: "Reach left index up to R, right index up to U.", text: "frf juj frf juj rur uru frf juj rur jfr uju ruru urur" },
+                    { id: 10, name: "Top Row: Middle Reaches (E & I)", guide: "Reach left middle to E, right middle to I.", text: "ded kik ded kik eie iei ded kik eiei ieie dede kiki" },
+                    { id: 11, name: "Top Row: Ring Reaches (W & O)", guide: "Reach left ring to W, right ring to O.", text: "sws lol sws lol wow owo sws lol wowo owow swsw lolo" },
+                    { id: 12, name: "Top Row: Pinky Reaches (Q & P)", guide: "Reach left pinky to Q, right pinky to P.", text: "aqa p;p aqa p;p qpq pqp aqa p;p qpqp pqpq aqaq p;p;" },
+                    { id: 13, name: "Top Row Outer Extension (T & Y)", guide: "Stretch index fingers upward to T and Y.", text: "ftf jyj ftf jyj tyt yty ftf jyj tyty ytyt ftft jyjy" },
+                    { id: 14, name: "Top Row Full Words", guide: "Practice common words using top and home rows.", text: "quiet tower write quote power retry route wiper equip proper" },
+                    { id: 15, name: "Top & Home Mix Practice", guide: "Smooth transition between home row and top row keys.", text: "flask write shirt quote flare pretty floor request tripe legal" }
+                ]
+            },
+            {
+                id: 3,
+                title: "Stage 3: Bottom Row Keys",
+                description: "Reach downward from Home Row to Z X C V B and N M , . /",
+                lessons: [
+                    { id: 16, name: "Bottom Row: Index Reaches (V & N)", guide: "Reach left index down to V, right index down to N.", text: "fvf jnj fvf jnj nvnv vnvn fvf jnj vnvn nvn vnvn" },
+                    { id: 17, name: "Bottom Row: Middle Reaches (C & ,)", guide: "Reach left middle down to C, right middle down to comma (,).", text: "dcd k,k dcd k,k c,c ,c,d dcd k,k c,c, ,c,c dcdc k,k," },
+                    { id: 18, name: "Bottom Row: Ring Reaches (X & .)", guide: "Reach left ring down to X, right ring down to period (.).", text: "sxs l.l sxs l.l x.x .x. sxs l.l x.x. .x.x sxsx l.l." },
+                    { id: 19, name: "Bottom Row: Pinky Reaches (Z & /)", guide: "Reach left pinky down to Z, right pinky down to slash (/).", text: "aza ;/; aza ;/; z/z /z/ aza ;/; z/z/ /z/z azaz ;/;" },
+                    { id: 20, name: "Bottom Row Center Extension (B & M)", guide: "Stretch left index to B, right index down to M.", text: "fbf jmj fbf jmj bmb mb3 fbf jmj bmbm mbmb fbfb jmjm" },
+                    { id: 21, name: "Full Alphabet Integration", guide: "Combine all three rows for complete letter coverage.", text: "the quick brown fox jumps over the lazy dog" },
+                    { id: 22, name: "Alphabet Sentences Drill", guide: "Reinforce motor memory across all standard letter keys.", text: "pack my box with five dozen liquor jugs for extra speed" }
+                ]
+            },
+            {
+                id: 4,
+                title: "Stage 4: Shift & Capitalization",
+                description: "Use opposite hand Shift keys to type capital letters and symbols.",
+                lessons: [
+                    { id: 23, name: "Left Shift with Right Hand Keys", guide: "Hold Left Shift with left pinky while typing right-hand letters.", text: "J K L U I O Y H N M Joy Hill King Milk Park Unity" },
+                    { id: 24, name: "Right Shift with Left Hand Keys", guide: "Hold Right Shift with right pinky while typing left-hand letters.", text: "A S D F Q W E R T Z X C V Fast Quest Water East Safe" },
+                    { id: 25, name: "Alternating Shift Mastery", guide: "Switch shift hands dynamically between words.", text: "London Paris Tokyo Berlin Rome NewYork Sydney Cairo Madrid" },
+                    { id: 26, name: "Proper Nouns & Titles", guide: "Practice capitalization in standard context.", text: "Dr. Smith visited New York City in early Spring with Alice." },
+                    { id: 27, name: "Sentence Capitalization Practice", guide: "Smooth shift releases without breaking typing rhythm.", text: "Always Check Your Home Row Alignment Before Typing Speed Tests." }
+                ]
+            },
+            {
+                id: 5,
+                title: "Stage 5: Numbers & Symbol Row",
+                description: "Master top numeric keys (1-0) and shift symbols (!@#$%^&*()).",
+                lessons: [
+                    { id: 28, name: "Left Hand Numbers (1 2 3 4 5)", guide: "Reach up from left hand home row to numbers.", text: "12345 54321 11223 34455 15243 43215 12345 54321" },
+                    { id: 29, name: "Right Hand Numbers (6 7 8 9 0)", guide: "Reach up from right hand home row to numbers.", text: "67890 09876 66778 89900 60798 98760 67890 09876" },
+                    { id: 30, name: "Full Number Row Drill", guide: "Mix all number keys across both hands.", text: "10 29 38 47 56 123 456 789 012 987 654 321 2026" },
+                    { id: 31, name: "Left Hand Symbols (! @ # $ %)", guide: "Hold Shift and type top row left symbols.", text: "!@#$% %$#@! !# $% !@# $%! !@#$% %$#@!" },
+                    { id: 32, name: "Right Hand Symbols (^ & * ( ))", guide: "Hold Shift and type top row right symbols.", text: "^&*() )(*&^ ^& *() ^&* ()^ ^&*() )(*&^" },
+                    { id: 33, name: "Punctuation & Brackets", guide: "Type quotes, brackets, hyphens, and equal signs.", text: "item = [1, 2, 3]; if (x <= 10) { return \"ok\"; }" }
+                ]
+            },
+            {
+                id: 6,
+                title: "Stage 6: Common Words & Muscle Memory",
+                description: "Build rapid muscle memory for the 100 most frequent English words.",
+                lessons: [
+                    { id: 34, name: "Top 10 High-Frequency Words", guide: "Type fluidly without pausing between individual letters.", text: "the be to of and a in that have I it for not on with" },
+                    { id: 35, name: "Common 4-Letter Word Clusters", guide: "Focus on continuous smooth key rhythms.", text: "that with have this will your from they know want like time" },
+                    { id: 36, name: "Common 5-Letter Word Clusters", guide: "Maintain high accuracy while building speed.", text: "about would these which there think take people year good" },
+                    { id: 37, name: "Frequent Double Letter Words", guide: "Maintain speed through doubled keystrokes.", text: "look keep see feel good book call fall glass speed free" },
+                    { id: 38, name: "Common Prefixes & Suffixes", guide: "Recognize patterns: pre-, un-, re-, -ing, -tion, -ment.", text: "reaction movement testing unlocked preview action segment" },
+                    { id: 39, name: "Short Phrases Fluidity", guide: "Combine words into natural structural phrases.", text: "in the middle of the day for the first time with all my heart" }
+                ]
+            },
+            {
+                id: 7,
+                title: "Stage 7: Speed & Accuracy Mastery",
+                description: "Challenge endurance, complex prose, and reach Expert Level (70+ WPM).",
+                lessons: [
+                    { id: 40, name: "Accuracy Endurance Drill 1", guide: "Aim for 100% accuracy. Precision builds true speed.", text: "Patience and practice build muscle memory faster than raw speed attempts." },
+                    { id: 41, name: "Accuracy Endurance Drill 2", guide: "Never check the keyboard. Rely entirely on finger feel.", text: "Touch typing allows your thoughts to flow directly onto the screen without interruption." },
+                    { id: 42, name: "Prose & Literature Paragraph 1", guide: "Type full natural prose with mixed capitalization and punctuation.", text: "It was a bright cold day in April, and the clocks were striking thirteen." },
+                    { id: 43, name: "Prose & Literature Paragraph 2", guide: "Maintain rhythm through longer sentences.", text: "To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment." },
+                    { id: 44, name: "Technical & Code Typing Prep", guide: "Practice typing code-like syntax with symbols.", text: "const calculateWpm = (chars, time) => { return Math.round((chars / 5) / time); };" },
+                    { id: 45, name: "Speed Sprint: 30 WPM Target", guide: "Push your pacing to clear 30 Words Per Minute.", text: "Speed is a natural byproduct of relaxed rhythm and consistent finger positioning." },
+                    { id: 46, name: "Speed Sprint: 45 WPM Target", guide: "Push your pacing to clear 45 Words Per Minute.", text: "When you stop looking down at keys, your typing speed automatically doubles over time." },
+                    { id: 47, name: "Speed Sprint: 60 WPM Target", guide: "Push your pacing to clear 60 Words Per Minute.", text: "Master typists maintain uniform keystroke velocity regardless of letter distance." },
+                    { id: 48, name: "Expert Challenge: Complex Vocabulary", guide: "Type complex multi-syllable terms without stopping.", text: "Architectural syncopation ubiquitous extraordinary quintessential paradigm juxtaposition." },
+                    { id: 49, name: "Expert Challenge: High-Speed Prose", guide: "Sustain fast execution across full text blocks.", text: "Continuous effort not strength or intelligence is the key to unlocking our potential every day." },
+                    { id: 50, name: "Grand Master Typing Test", guide: "Final graduation test. Demonstrate expert speed and precision!", text: "Congratulations on reaching the final test. Touch typing is now a lifelong superpower for you." }
+                ]
+            }
+        ];
+
+        // Finger mapping lookup for highlighting guide keys
+        const FINGER_MAP = {
+            'q': { finger: 'Left Pinky', key: 'q', class: 'text-red-400' },
+            'a': { finger: 'Left Pinky', key: 'a', class: 'text-red-400' },
+            'z': { finger: 'Left Pinky', key: 'z', class: 'text-red-400' },
+            '1': { finger: 'Left Pinky', key: '1', class: 'text-red-400' },
+            '`': { finger: 'Left Pinky', key: '`', class: 'text-red-400' },
+            '!': { finger: 'Left Pinky', key: '1', class: 'text-red-400' },
+
+            'w': { finger: 'Left Ring', key: 'w', class: 'text-orange-400' },
+            's': { finger: 'Left Ring', key: 's', class: 'text-orange-400' },
+            'x': { finger: 'Left Ring', key: 'x', class: 'text-orange-400' },
+            '2': { finger: 'Left Ring', key: '2', class: 'text-orange-400' },
+            '@': { finger: 'Left Ring', key: '2', class: 'text-orange-400' },
+
+            'e': { finger: 'Left Middle', key: 'e', class: 'text-yellow-400' },
+            'd': { finger: 'Left Middle', key: 'd', class: 'text-yellow-400' },
+            'c': { finger: 'Left Middle', key: 'c', class: 'text-yellow-400' },
+            '3': { finger: 'Left Middle', key: '3', class: 'text-yellow-400' },
+            '#': { finger: 'Left Middle', key: '3', class: 'text-yellow-400' },
+
+            'r': { finger: 'Left Index', key: 'r', class: 'text-green-400' },
+            'f': { finger: 'Left Index', key: 'f', class: 'text-green-400' },
+            'v': { finger: 'Left Index', key: 'v', class: 'text-green-400' },
+            't': { finger: 'Left Index', key: 't', class: 'text-green-400' },
+            'g': { finger: 'Left Index', key: 'g', class: 'text-green-400' },
+            'b': { finger: 'Left Index', key: 'b', class: 'text-green-400' },
+            '4': { finger: 'Left Index', key: '4', class: 'text-green-400' },
+            '5': { finger: 'Left Index', key: '5', class: 'text-green-400' },
+            '$': { finger: 'Left Index', key: '4', class: 'text-green-400' },
+            '%': { finger: 'Left Index', key: '5', class: 'text-green-400' },
+
+            'y': { finger: 'Right Index', key: 'y', class: 'text-cyan-400' },
+            'h': { finger: 'Right Index', key: 'h', class: 'text-cyan-400' },
+            'n': { finger: 'Right Index', key: 'n', class: 'text-cyan-400' },
+            'u': { finger: 'Right Index', key: 'u', class: 'text-cyan-400' },
+            'j': { finger: 'Right Index', key: 'j', class: 'text-cyan-400' },
+            'm': { finger: 'Right Index', key: 'm', class: 'text-cyan-400' },
+            '6': { finger: 'Right Index', key: '6', class: 'text-cyan-400' },
+            '7': { finger: 'Right Index', key: '7', class: 'text-cyan-400' },
+            '^': { finger: 'Right Index', key: '6', class: 'text-cyan-400' },
+            '&': { finger: 'Right Index', key: '7', class: 'text-cyan-400' },
+
+            'i': { finger: 'Right Middle', key: 'i', class: 'text-indigo-400' },
+            'k': { finger: 'Right Middle', key: 'k', class: 'text-indigo-400' },
+            ',': { finger: 'Right Middle', key: ',', class: 'text-indigo-400' },
+            '<': { finger: 'Right Middle', key: ',', class: 'text-indigo-400' },
+            '8': { finger: 'Right Middle', key: '8', class: 'text-indigo-400' },
+            '*': { finger: 'Right Middle', key: '8', class: 'text-indigo-400' },
+
+            'o': { finger: 'Right Ring', key: 'o', class: 'text-purple-400' },
+            'l': { finger: 'Right Ring', key: 'l', class: 'text-purple-400' },
+            '.': { finger: 'Right Ring', key: '.', class: 'text-purple-400' },
+            '>': { finger: 'Right Ring', key: '.', class: 'text-purple-400' },
+            '9': { finger: 'Right Ring', key: '9', class: 'text-purple-400' },
+            '(': { finger: 'Right Ring', key: '9', class: 'text-purple-400' },
+
+            'p': { finger: 'Right Pinky', key: 'p', class: 'text-pink-400' },
+            ';': { finger: 'Right Pinky', key: ';', class: 'text-pink-400' },
+            ':': { finger: 'Right Pinky', key: ';', class: 'text-pink-400' },
+            '/': { finger: 'Right Pinky', key: '/', class: 'text-pink-400' },
+            '?': { finger: 'Right Pinky', key: '/', class: 'text-pink-400' },
+            '[': { finger: 'Right Pinky', key: '[', class: 'text-pink-400' },
+            ']': { finger: 'Right Pinky', key: ']', class: 'text-pink-400' },
+            '0': { finger: 'Right Pinky', key: '0', class: 'text-pink-400' },
+            ')': { finger: 'Right Pinky', key: '0', class: 'text-pink-400' },
+            '-': { finger: 'Right Pinky', key: '-', class: 'text-pink-400' },
+
+            ' ': { finger: 'Thumbs', key: ' ', class: 'text-slate-300' }
+        };
+
+        // Application Engine State
+        class TypeMasterApp {
+            constructor() {
+                this.currentLesson = null;
+                this.currentIndex = 0;
+                this.errorsCount = 0;
+                this.totalKeystrokes = 0;
+                this.startTime = null;
+                this.timerInterval = null;
+                this.soundEnabled = true;
+                this.userProgress = this.loadProgress();
+
+                // Web Audio Context for synthesized sound feedback
+                this.audioCtx = null;
+
+                this.init();
+            }
+
+            init() {
+                this.renderDashboard();
+                this.updateHeaderProgress();
+                this.setupInputListeners();
+            }
+
+            // Audio synthesis for keystroke click and error beep
+            playAudio(type) {
+                if (!this.soundEnabled) return;
+                try {
+                    if (!this.audioCtx) {
+                        this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    }
+                    if (this.audioCtx.state === 'suspended') {
+                        this.audioCtx.resume();
+                    }
+
+                    const osc = this.audioCtx.createOscillator();
+                    const gain = this.audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(this.audioCtx.destination);
+
+                    if (type === 'key') {
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(440, this.audioCtx.currentTime);
+                        gain.gain.setValueAtTime(0.03, this.audioCtx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + 0.04);
+                        osc.start();
+                        osc.stop(this.audioCtx.currentTime + 0.04);
+                    } else if (type === 'error') {
+                        osc.type = 'sawtooth';
+                        osc.frequency.setValueAtTime(160, this.audioCtx.currentTime);
+                        gain.gain.setValueAtTime(0.08, this.audioCtx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + 0.15);
+                        osc.start();
+                        osc.stop(this.audioCtx.currentTime + 0.15);
+                    }
+                } catch (e) {
+                    console.log("Audio not allowed yet");
+                }
+            }
+
+            toggleSound() {
+                this.soundEnabled = !this.soundEnabled;
+                document.getElementById('sound-icon').textContent = this.soundEnabled ? '🔊' : '🔇';
+            }
+
+            // Local Storage Persistence
+            loadProgress() {
+                const saved = localStorage.getItem('typemaster_progress');
+                if (saved) {
+                    try { return JSON.parse(saved); } catch (e) { }
+                }
+                return { completed: {}, lastLessonId: 1 };
+            }
+
+            saveProgress() {
+                localStorage.setItem('typemaster_progress', JSON.stringify(this.userProgress));
+                this.updateHeaderProgress();
+            }
+
+            resetProgress() {
+                if (confirm("Are you sure you want to reset all typing lesson progress?")) {
+                    this.userProgress = { completed: {}, lastLessonId: 1 };
+                    this.saveProgress();
+                    this.renderDashboard();
+                }
+            }
+
+            updateHeaderProgress() {
+                const total = 50;
+                const completedCount = Object.keys(this.userProgress.completed).length;
+                document.getElementById('header-progress').textContent = `${completedCount} / ${total}`;
+
+                // Update Stats
+                let totalWpm = 0, count = 0, bestWpm = 0;
+                for (let id in this.userProgress.completed) {
+                    const item = this.userProgress.completed[id];
+                    totalWpm += item.wpm;
+                    if (item.wpm > bestWpm) bestWpm = item.wpm;
+                    count++;
+                }
+
+                const avgAcc = count > 0 ? Math.round(Object.values(this.userProgress.completed).reduce((a, b) => a + b.accuracy, 0) / count) : 0;
+                const totalStars = Object.values(this.userProgress.completed).reduce((a, b) => a + (b.stars || 0), 0);
+
+                document.getElementById('stat-best-wpm').textContent = `${bestWpm} WPM`;
+                document.getElementById('stat-avg-acc').textContent = `${avgAcc}%`;
+                document.getElementById('stat-stars').textContent = `⭐ ${totalStars}`;
+                document.getElementById('stat-rank').textContent = this.calculateRank(bestWpm);
+            }
+
+            // Skill Level Assessment mapping
+            calculateRank(wpm) {
+                if (wpm >= 70) return "Master Typist 🏆";
+                if (wpm >= 55) return "Expert Typist 🚀";
+                if (wpm >= 40) return "Advanced Typist ⚡";
+                if (wpm >= 25) return "Intermediate Typist 📈";
+                if (wpm >= 15) return "Beginner Typist 🌱";
+                return "Novice Typist 🐥";
+            }
+
+            renderDashboard() {
+                const container = document.getElementById('stages-container');
+                container.innerHTML = '';
+
+                let previousCompleted = true; // First lesson is unlocked
+
+                LESSON_STAGES.forEach(stage => {
+                    const stageDiv = document.createElement('div');
+                    stageDiv.className = "bg-slate-950 border border-slate-800/80 rounded-2xl p-5 space-y-4 shadow-md";
+
+                    let stageHtml = `
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/60 pb-3">
+                            <div>
+                                <h4 class="font-bold text-white text-base">${stage.title}</h4>
+                                <p class="text-xs text-slate-400">${stage.description}</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    `;
+
+                    stage.lessons.forEach(lesson => {
+                        const isDone = !!this.userProgress.completed[lesson.id];
+                        const isUnlocked = previousCompleted || isDone || lesson.id === 1;
+                        previousCompleted = isDone;
+
+                        const stats = this.userProgress.completed[lesson.id];
+                        const stars = stats ? '⭐'.repeat(stats.stars) : '';
+
+                        stageHtml += `
+                            <div onclick="${isUnlocked ? `app.startLesson(${lesson.id})` : ''}" 
+                                 class="p-3.5 rounded-xl border transition-all duration-150 ${
+                                    isUnlocked 
+                                    ? 'bg-slate-900 border-slate-800 hover:border-indigo-500/50 hover:bg-slate-800/80 cursor-pointer' 
+                                    : 'bg-slate-900/30 border-slate-800/40 opacity-50 cursor-not-allowed'
+                                 }">
+                                <div class="flex items-center justify-between mb-1.5">
+                                    <span class="text-[11px] font-bold text-slate-500 uppercase">Lesson ${lesson.id}</span>
+                                    ${isDone ? `<span class="text-xs">${stars}</span>` : ''}
+                                </div>
+                                <div class="text-xs font-bold text-slate-200 truncate mb-1" title="${lesson.name}">${lesson.name}</div>
+                                <div class="flex items-center justify-between text-[10px] text-slate-400">
+                                    <span>${stats ? `${stats.wpm} WPM | ${stats.accuracy}%` : (isUnlocked ? 'Ready' : 'Locked 🔒')}</span>
+                                    ${isDone ? '<span class="text-emerald-400 font-bold">✓ Done</span>' : ''}
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    stageHtml += `</div>`;
+                    stageDiv.innerHTML = stageHtml;
+                    container.appendChild(stageDiv);
+                });
+            }
+
+            continueLesson() {
+                // Find first incomplete lesson
+                for (let stage of LESSON_STAGES) {
+                    for (let lesson of stage.lessons) {
+                        if (!this.userProgress.completed[lesson.id]) {
+                            this.startLesson(lesson.id);
+                            return;
+                        }
+                    }
+                }
+                this.startLesson(1);
+            }
+
+            startLesson(lessonId) {
+                // Find lesson object
+                let foundLesson = null;
+                let foundStage = null;
+                for (let stage of LESSON_STAGES) {
+                    let l = stage.lessons.find(item => item.id === lessonId);
+                    if (l) {
+                        foundLesson = l;
+                        foundStage = stage;
+                        break;
+                    }
+                }
+
+                if (!foundLesson) return;
+
+                this.currentLesson = foundLesson;
+                this.currentIndex = 0;
+                this.errorsCount = 0;
+                this.totalKeystrokes = 0;
+                this.startTime = null;
+                clearInterval(this.timerInterval);
+
+                // Update UI elements
+                document.getElementById('view-dashboard').classList.add('hidden');
+                document.getElementById('view-lesson').classList.remove('hidden');
+                document.getElementById('lesson-stage-title').textContent = foundStage.title;
+                document.getElementById('lesson-title').textContent = foundLesson.name;
+                document.getElementById('lesson-guide-text').textContent = foundLesson.guide;
+
+                document.getElementById('live-wpm').textContent = '0';
+                document.getElementById('live-accuracy').textContent = '100%';
+                document.getElementById('live-errors').textContent = '0';
+                document.getElementById('live-timer').textContent = '00:00';
+                document.getElementById('start-prompt-overlay').classList.remove('hidden');
+
+                this.renderPromptText();
+                this.highlightNextKey();
+                this.focusTypingInput();
+            }
+
+            renderPromptText() {
+                const promptContainer = document.getElementById('typing-prompt');
+                promptContainer.innerHTML = '';
+
+                const text = this.currentLesson.text;
+                for (let i = 0; i < text.length; i++) {
+                    const span = document.createElement('span');
+                    span.id = `char-${i}`;
+                    span.textContent = text[i] === ' ' ? '␣' : text[i];
+                    if (i === 0) span.className = 'char-current';
+                    promptContainer.appendChild(span);
+                }
+            }
+
+            highlightNextKey() {
+                // Clear previous key highlights
+                document.querySelectorAll('.key').forEach(k => {
+                    k.classList.remove('key-active', 'key-error');
+                });
+
+                if (this.currentIndex >= this.currentLesson.text.length) return;
+
+                const currentChar = this.currentLesson.text[this.currentIndex];
+                const charLower = currentChar.toLowerCase();
+                const mapping = FINGER_MAP[charLower] || FINGER_MAP[currentChar];
+
+                if (mapping) {
+                    const keyEl = document.querySelector(`.key[data-key="${mapping.key}"]`);
+                    if (keyEl) keyEl.classList.add('key-active');
+
+                    // If capital or shifted symbol, also highlight Shift key
+                    if (currentChar !== currentChar.toLowerCase() || "!@#$%^&*()_+{}|:\"<>?".includes(currentChar)) {
+                        const shiftKey = document.querySelector(`.key[data-key="ShiftLeft"]`);
+                        if (shiftKey) shiftKey.classList.add('key-active');
+                    }
+
+                    // Update Badge
+                    const badge = document.getElementById('target-finger-badge');
+                    badge.textContent = mapping.finger;
+                    badge.className = `font-bold ${mapping.class}`;
+                }
+            }
+
+            focusTypingInput() {
+                const input = document.getElementById('hidden-typing-input');
+                input.focus();
+            }
+
+            // Keystroke listeners
+            setupInputListeners() {
+                const input = document.getElementById('hidden-typing-input');
+
+                window.addEventListener('keydown', (e) => {
+                    if (document.getElementById('view-lesson').classList.contains('hidden')) return;
+
+                    // Keep focus on input unless active on modals
+                    if (e.target !== input) input.focus();
+
+                    // Key visual pressed feedback
+                    let key = e.key;
+                    if (key === ' ') key = ' ';
+                    const keyEl = document.querySelector(`.key[data-key="${key.toLowerCase()}"]`) || document.querySelector(`.key[data-key="${key}"]`);
+                    if (keyEl) keyEl.classList.add('key-pressed');
+
+                    // Process character input
+                    if (e.key.length === 1 || e.key === 'Backspace') {
+                        this.handleKeystroke(e.key);
+                    }
+                });
+
+                window.addEventListener('keyup', (e) => {
+                    let key = e.key;
+                    if (key === ' ') key = ' ';
+                    const keyEl = document.querySelector(`.key[data-key="${key.toLowerCase()}"]`) || document.querySelector(`.key[data-key="${key}"]`);
+                    if (keyEl) keyEl.classList.remove('key-pressed');
+                });
+            }
+
+            handleKeystroke(key) {
+                if (this.currentIndex >= this.currentLesson.text.length) return;
+
+                // Start Timer on first keystroke
+                if (!this.startTime) {
+                    this.startTime = new Date();
+                    document.getElementById('start-prompt-overlay').classList.add('hidden');
+                    this.timerInterval = setInterval(() => this.updateTimerAndMetrics(), 500);
+                }
+
+                const expectedChar = this.currentLesson.text[this.currentIndex];
+
+                if (key === expectedChar) {
+                    // Correct key pressed
+                    this.playAudio('key');
+                    const charSpan = document.getElementById(`char-${this.currentIndex}`);
+                    if (charSpan) {
+                        charSpan.className = 'char-correct';
+                    }
+
+                    this.currentIndex++;
+                    this.totalKeystrokes++;
+
+                    // Highlight next char
+                    if (this.currentIndex < this.currentLesson.text.length) {
+                        const nextSpan = document.getElementById(`char-${this.currentIndex}`);
+                        if (nextSpan) nextSpan.className = 'char-current';
+                    } else {
+                        // Lesson Completed
+                        this.completeLesson();
+                    }
+                } else {
+                    // Wrong key pressed
+                    this.playAudio('error');
+                    this.errorsCount++;
+                    this.totalKeystrokes++;
+
+                    const charSpan = document.getElementById(`char-${this.currentIndex}`);
+                    if (charSpan) charSpan.className = 'char-wrong';
+
+                    // Shake typing area briefly
+                    const area = document.getElementById('typing-area');
+                    area.classList.remove('animate-shake');
+                    void area.offsetWidth; // Trigger reflow
+                    area.classList.add('animate-shake');
+                }
+
+                this.updateTimerAndMetrics();
+                this.highlightNextKey();
+            }
+
+            updateTimerAndMetrics() {
+                if (!this.startTime) return;
+
+                const now = new Date();
+                const elapsedSeconds = Math.max(1, Math.floor((now - this.startTime) / 1000));
+                const mins = Math.floor(elapsedSeconds / 60).toString().padStart(2, '0');
+                const secs = (elapsedSeconds % 60).toString().padStart(2, '0');
+                document.getElementById('live-timer').textContent = `${mins}:${secs}`;
+
+                // Calculate WPM: (characters / 5) / elapsed minutes
+                const wordsTyped = this.currentIndex / 5;
+                const minutes = elapsedSeconds / 60;
+                const wpm = Math.round(wordsTyped / minutes);
+
+                // Calculate Accuracy
+                const accuracy = this.totalKeystrokes > 0 
+                    ? Math.max(0, Math.round(((this.totalKeystrokes - this.errorsCount) / this.totalKeystrokes) * 100))
+                    : 100;
+
+                document.getElementById('live-wpm').textContent = isNaN(wpm) ? 0 : wpm;
+                document.getElementById('live-accuracy').textContent = `${accuracy}%`;
+                document.getElementById('live-errors').textContent = this.errorsCount;
+            }
+
+            completeLesson() {
+                clearInterval(this.timerInterval);
+
+                const elapsedSeconds = Math.max(1, Math.floor((new Date() - this.startTime) / 1000));
+                const mins = Math.floor(elapsedSeconds / 60).toString().padStart(2, '0');
+                const secs = (elapsedSeconds % 60).toString().padStart(2, '0');
+                const formattedTime = `${mins}:${secs}`;
+
+                const wordsTyped = this.currentLesson.text.length / 5;
+                const minutes = elapsedSeconds / 60;
+                const finalWpm = Math.round(wordsTyped / minutes);
+                const finalAcc = Math.max(0, Math.round(((this.totalKeystrokes - this.errorsCount) / this.totalKeystrokes) * 100));
+
+                // Calculate Star Rating
+                let stars = 1;
+                if (finalAcc >= 92 && finalWpm >= 15) stars = 2;
+                if (finalAcc >= 97 && finalWpm >= 25) stars = 3;
+
+                // Rank
+                const rank = this.calculateRank(finalWpm);
+
+                // Save to local storage progress
+                this.userProgress.completed[this.currentLesson.id] = {
+                    wpm: finalWpm,
+                    accuracy: finalAcc,
+                    stars: stars,
+                    date: new Date().toISOString()
+                };
+                this.saveProgress();
+
+                // Show Results Modal
+                document.getElementById('res-lesson-title').textContent = this.currentLesson.name;
+                document.getElementById('res-stars').textContent = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+                document.getElementById('res-rank').textContent = rank;
+                document.getElementById('res-wpm').textContent = finalWpm;
+                document.getElementById('res-acc').textContent = `${finalAcc}%`;
+                document.getElementById('res-time').textContent = formattedTime;
+
+                // Tailored feedback text
+                let feedbackText = "";
+                if (finalAcc < 90) {
+                    feedbackText = "Accuracy was below 90%. Focus on key precision before increasing typing speed. Try repeating this lesson!";
+                } else if (finalWpm < 20) {
+                    feedbackText = "Great precision! Now work on building fluid muscle memory without looking down at the keyboard.";
+                } else {
+                    feedbackText = "Outstanding performance! Excellent accuracy and rhythm. You are well on your way to typing mastery!";
+                }
+                document.getElementById('res-feedback').textContent = feedbackText;
+
+                document.getElementById('modal-results').classList.remove('hidden');
+            }
+
+            retryLesson() {
+                document.getElementById('modal-results').classList.add('hidden');
+                this.startLesson(this.currentLesson.id);
+            }
+
+            nextLesson() {
+                document.getElementById('modal-results').classList.add('hidden');
+                const nextId = this.currentLesson.id + 1;
+                if (nextId <= 50) {
+                    this.startLesson(nextId);
+                } else {
+                    this.showDashboard();
+                }
+            }
+
+            showDashboard() {
+                clearInterval(this.timerInterval);
+                document.getElementById('view-lesson').classList.add('hidden');
+                document.getElementById('view-dashboard').classList.remove('hidden');
+                this.renderDashboard();
+            }
+
+            // Custom Practice Modal
+            showCustomPractice() {
+                document.getElementById('modal-custom').classList.remove('hidden');
+            }
+
+            hideCustomPractice() {
+                document.getElementById('modal-custom').classList.add('hidden');
+            }
+
+            startCustomLesson() {
+                const text = document.getElementById('custom-text-input').value.trim();
+                if (!text) return;
+
+                this.currentLesson = {
+                    id: 999,
+                    name: "Custom Practice Test",
+                    guide: "Custom text practice mode.",
+                    text: text
+                };
+
+                this.hideCustomPractice();
+                document.getElementById('view-dashboard').classList.add('hidden');
+                document.getElementById('view-lesson').classList.remove('hidden');
+                document.getElementById('lesson-stage-title').textContent = "Custom Mode";
+                document.getElementById('lesson-title').textContent = "Custom Practice";
+                document.getElementById('lesson-guide-text').textContent = "Type the custom text accurately.";
+
+                this.currentIndex = 0;
+                this.errorsCount = 0;
+                this.totalKeystrokes = 0;
+                this.startTime = null;
+                clearInterval(this.timerInterval);
+
+                this.renderPromptText();
+                this.highlightNextKey();
+                this.focusTypingInput();
+            }
+        }
+
+        // Initialize Application on Window Load
+        let app;
+        window.onload = function () {
+            app = new TypeMasterApp();
+        };
+    </script>
+</body>
+</html>
