@@ -1,16 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Self Enroll - EduForge Platform</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f4f4f9;
+    }
+    .enroll-container {
+      max-width: 500px;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .input-group {
+      margin-bottom: 12px;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px 16px;
+      background-color: #0969da;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0353b4;
+    }
+    #status {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    #result {
+      margin-top: 15px;
+      background: #eef;
+      padding: 10px;
+      border-radius: 4px;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
 
-<div id="password">12Brayden</div>
+<div class="enroll-container">
+  <h2>Self Enroll in Classes</h2>
+  <p>Enter up to 4 class file names (e.g., <code>WiseELA.html</code>):</p>
 
-<div id="classes">
-  <a href="https://github.com/Mistyitz/EduForgePlatform-/blob/main/Classes/Typing.html">Typing Lessons</a>
-  <a href="https://github.com/Mistyitz/EduForgePlatform-/blob/main/Classes/Gaming%20help.html">Gaming Help</a>
-  <a href="https://github.com/Mistyitz/EduForgePlatform-/blob/main/Classes/WiseELA.html">Pheoinix Wise ELA</a>
-  <a href="https://github.com/Mistyitz/EduForgePlatform-/blob/main/Classes/Lock.html">LockDown Browser application</a>
+  <div class="input-group">
+    <label for="class1">Class 1:</label>
+    <input type="text" id="class1" placeholder="e.g. WiseELA.html">
+  </div>
+  <div class="input-group">
+    <label for="class2">Class 2:</label>
+    <input type="text" id="class2" placeholder="e.g. Typing.html">
+  </div>
+  <div class="input-group">
+    <label for="class3">Class 3:</label>
+    <input type="text" id="class3" placeholder="e.g. Lock.html">
+  </div>
+  <div class="input-group">
+    <label for="class4">Class 4:</label>
+    <input type="text" id="class4" placeholder="e.g. Gaming help.html">
+  </div>
+
+  <button onclick="searchAndEnroll()">Enroll Classes</button>
+
+  <div id="status"></div>
+  <div id="result"></div>
 </div>
 
 <script>
-  // Dynamically appends the classes stored in enrolledClassesHTML if the variable exists
-  if (typeof enrolledClassesHTML !== "undefined" && enrolledClassesHTML !== "") {
-    document.getElementById("classes").innerHTML += "\n  " + enrolledClassesHTML;
+  // Global variable holding the final HTML formatted class links
+  var enrolledClassesHTML = "";
+
+  const REPO_OWNER = "Mistyitz";
+  const REPO_NAME = "EduForgePlatform-";
+  const BRANCH = "main";
+
+  async function searchAndEnroll() {
+    const statusDiv = document.getElementById("status");
+    const resultDiv = document.getElementById("result");
+    statusDiv.innerText = "Scanning GitHub repository...";
+    resultDiv.innerText = "";
+    enrolledClassesHTML = "";
+
+    // Collect user inputs
+    const inputs = [
+      document.getElementById("class1").value.trim(),
+      document.getElementById("class2").value.trim(),
+      document.getElementById("class3").value.trim(),
+      document.getElementById("class4").value.trim()
+    ].filter(name => name.length > 0);
+
+    if (inputs.length === 0) {
+      statusDiv.innerText = "Please enter at least one class file name.";
+      return;
+    }
+
+    try {
+      // Fetch entire file tree recursively using GitHub API
+      const treeUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/git/trees/${BRANCH}?recursive=1`;
+      const response = await fetch(treeUrl);
+      if (!response.ok) {
+        throw new Error("Failed to fetch repository tree.");
+      }
+      
+      const data = await response.json();
+      const files = data.tree; // Array of file objects in repo
+
+      let matches = [];
+
+      // Search repository tree for matching filenames across all subfolders
+      inputs.forEach(targetFile => {
+        const foundFile = files.find(item => {
+          const fileNameOnly = item.path.split('/').pop();
+          return fileNameOnly.toLowerCase() === targetFile.toLowerCase();
+        });
+
+        if (foundFile) {
+          // Construct GitHub blob URL
+          const fullPath = encodeURI(foundFile.path);
+          const rawFileName = foundFile.path.split('/').pop().replace('.html', '');
+          const cleanTitle = decodeURIComponent(rawFileName);
+
+          const linkTag = `<a href="https://github.com/${REPO_OWNER}/${REPO_NAME}/blob/${BRANCH}/${fullPath}">${cleanTitle}</a>`;
+          matches.push(linkTag);
+        }
+      });
+
+      if (matches.length > 0) {
+        // Push matching anchor tags to the variable
+        enrolledClassesHTML = matches.join("\n  ");
+
+        statusDiv.innerText = `Found ${matches.length} matching file(s)!`;
+        resultDiv.innerText = enrolledClassesHTML;
+      } else {
+        statusDiv.innerText = "No matching classes found in repository.";
+      }
+
+    } catch (error) {
+      console.error(error);
+      statusDiv.innerText = "Error searching repository. Make sure the repo is public or check internet connection.";
+    }
   }
 </script>
+
+</body>
+</html>
