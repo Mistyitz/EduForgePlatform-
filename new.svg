@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
   <foreignObject width="100%" height="100%">
-    <div xmlns="http://www.w3.org/1999/xhtml" style="width: 100%; height: 100%;">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width: 100%; min-height: 100vh; background-color: #f8fafc;">
       <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body, .app-root { background-color: #f8fafc; color: #1e293b; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; }
+        .app-root { background-color: #f8fafc; color: #1e293b; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; width: 100%; }
         
         header { width: 100%; max-width: 800px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
         .logo { font-size: 1.35rem; font-weight: 700; color: #2563eb; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
@@ -25,12 +25,13 @@
         #dashboard-section { display: none; width: 100%; max-width: 800px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 20px; }
         
-        .class-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; text-align: left; cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; justify-content: space-between; height: 120px; text-decoration: none; color: inherit; }
-        .class-card:hover { border-color: #2563eb; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1); transform: translateY(-2px); }
+        /* Fixed Class Card Box Styling */
+        .class-card { background: #ffffff !important; border: 1px solid #cbd5e1 !important; border-radius: 10px !important; padding: 20px !important; text-align: left; cursor: pointer; transition: all 0.2s ease; display: flex !important; flex-direction: column !important; justify-content: space-between !important; height: 120px !important; text-decoration: none !important; color: inherit !important; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .class-card:hover { border-color: #2563eb !important; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15) !important; transform: translateY(-2px); }
         .class-title { font-size: 1rem; font-weight: 600; color: #0f172a; }
         .class-action { font-size: 0.8rem; font-weight: 600; color: #2563eb; }
         
-        .logout-btn { background: transparent; color: #64748b; border: 1px solid #cbd5e1; width: auto; padding: 6px 12px; font-size: 0.85rem; margin: 0; }
+        .logout-btn { background: #ffffff; color: #64748b; border: 1px solid #cbd5e1; width: auto; padding: 6px 12px; font-size: 0.85rem; margin: 0; border-radius: 6px; }
         .logout-btn:hover { background: #f1f5f9; color: #0f172a; }
       </style>
 
@@ -44,7 +45,7 @@
           <h2>Student Login</h2>
           <div class="form-group">
             <label for="username">Username</label>
-            <input type="text" id="username" placeholder="e.g. Max" />
+            <input type="text" id="username" placeholder="e.g. Aspen" />
           </div>
           <div class="form-group">
             <label for="password">Password</label>
@@ -64,6 +65,9 @@
       </div>
 
       <script><![CDATA[
+        // Set Document Title Dynamically
+        document.title = "EduForge";
+
         const REPO_OWNER = "Mistyitz";
         const REPO_NAME = "EduForgePlatform-";
         const BRANCH = "main";
