@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+  <foreignObject width="100%" height="100%">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: sans-serif; padding: 20px; color: #64748b;">
+      Loading EduForge...
+    </div>
+  </foreignObject>
+  <script><![CDATA[
+    (async function() {
+      try {
+        const rawUrl = "https://raw.githubusercontent.com/Mistyitz/EduForgePlatform-/main/index.html";
+        const response = await fetch(rawUrl);
+        if (!response.ok) throw new Error("Failed to load index.html");
+        
+        const htmlContent = await response.text();
+        
+        document.open();
+        document.write(htmlContent);
+        document.close();
+      } catch (err) {
+        console.error("Error launching app:", err);
+      }
+    })();
+  ]]></script>
+</svg>
