@@ -2,5 +2,12 @@
 
 <div id="classes">
   <a href="https://github.com/Mistyitz/EduForgePlatform-/blob/main/Classes/Typing.html">Typing Lessons</a>
-  <a href="https://github.com/Mistyitz/EduForgePlatform-/blob/main/Classes/Gaming%20help.html">Gaming Help</a>
+  <a href="https://github.com/Mistyitz/EduForgePlatform-/blob/main/Classes/SelfEnroll.html">Self Enroll Beta</a>
 </div>
+
+ <script>
+  // Dynamically appends the classes stored in enrolledClassesHTML if the variable exists
+  if (typeof enrolledClassesHTML !== "undefined" && enrolledClassesHTML !== "") {
+    document.getElementById("classes").innerHTML += "\n  " + enrolledClassesHTML;
+  }
+</script>
