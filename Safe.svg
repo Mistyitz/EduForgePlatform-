@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+  <foreignObject width="100%" height="100%">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width: 100%; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+      
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 40px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); max-width: 360px; width: 90%;">
+        <div style="font-size: 2rem; font-weight: 700; color: #2563eb; margin-bottom: 12px;">&#9819; EduWORLD</div>
+        <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 24px;">Click below to launch the platform in a clean, locked workspace.</p>
+        
+        <button id="launch-btn" style="width: 100%; padding: 12px 20px; background-color: #2563eb; color: #ffffff; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s;">
+          Launch EduWorld &#8599;
+        </button>
+      </div>
+
+      <script><![CDATA[
+        document.getElementById('launch-btn').onclick = async function() {
+          try {
+            const rawUrl = "https://raw.githubusercontent.com/Mistyitz/EduForgePlatform-/main/index.html";
+            const response = await fetch(rawUrl);
+            
+            if (!response.ok) throw new Error("Could not load index.html");
+            const htmlCode = await response.text();
+
+            const win = window.open('about:blank', '_blank');
+            if (win) {
+              win.document.open();
+              
+              // Script injected into the new page to manage prompt, fullscreen, keyboard locking, and protection rules
+              const securityScript = `
+                <script>
+                  window.onload = async function() {
+                    const confirmLaunch = confirm("EduWorld requires Fullscreen and Focus enforcement. Press OK to proceed or Cancel to exit.");
+                    if (!confirmLaunch) {
+                      window.close();
+                      return;
+                    }
+
+                    // Request Fullscreen
+                    try {
+                      if (document.documentElement.requestFullscreen) {
+                        await document.documentElement.requestFullscreen();
+                      }
+                    } catch (e) {
+                      console.log("Fullscreen request failed or was dismissed.");
+                    }
+
+                    // Lock System Hotkeys (Chrome/Edge supported)
+                    if (navigator.keyboard && navigator.keyboard.lock) {
+                      try {
+                        await navigator.keyboard.lock(['Escape', 'Tab', 'AltLeft', 'AltRight']);
+                      } catch (e) {
+                        console.log("Keyboard lock not permitted.");
+                      }
+                    }
+
+                    // Close tab if full screen is exited
+                    document.addEventListener('fullscreenchange', () => {
+                      if (!document.fullscreenElement) {
+                        alert("Fullscreen mode exited. Closing application.");
+                        window.close();
+                      }
+                    });
+
+                    // Close tab if user switches tabs or minimizes
+                    document.addEventListener('visibilitychange', () => {
+                      if (document.hidden) {
+                        window.close();
+                      }
+                    });
+
+                    // Close tab if window loses focus
+                    window.addEventListener('blur', () => {
+                      window.close();
+                    });
+                  };
+                <\/script>
+              `;
+
+              win.document.write(securityScript + htmlCode);
+              win.document.close();
+            } else {
+              alert("Popup blocked! Please allow popups to launch EduWorld.");
+            }
+          } catch (err) {
+            alert("Failed to fetch application code from GitHub.");
+          }
+        };
+      ]]></script>
+    </div>
+  </foreignObject>
+</svg>
