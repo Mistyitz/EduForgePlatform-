@@ -1,0 +1,47 @@
+const REPO_OWNER = "Mistyitz";
+const REPO_NAME = "EduForgePlatform-";
+const TEST_FOLDER_NAME = "Test"; // Updated to match case on GitHub
+let availableFiles = [];
+let currentTest = null;
+
+// Fetch the list of files in the /Test folder
+async function loadTestDirectory() {
+  const statusText = document.getElementById('status-text');
+  const testList = document.getElementById('test-list');
+
+  try {
+    const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${TEST_FOLDER_NAME}`);
+    if (!response.ok) throw new Error(`Could not find /${TEST_FOLDER_NAME} folder`);
+    
+    availableFiles = await response.json();
+    testList.innerHTML = "";
+
+    const testFiles = availableFiles.filter(file => file.type === "file");
+
+    if (testFiles.length === 0) {
+      statusText.innerText = `No test files found in /${TEST_FOLDER_NAME} folder.`;
+      return;
+    }
+
+    statusText.innerText = "Select a test file to start:";
+
+    testFiles.forEach((file, index) => {
+      const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
+
+      const card = document.createElement('div');
+      card.className = 'test-card';
+      card.innerHTML = `
+        <div>
+          <div class="test-title">${cleanName}</div>
+          <small style="color: #64748b;">${file.name}</small>
+        </div>
+        <button class="btn" onclick="selectAndRunTest(${index})">Start</button>
+      `;
+      testList.appendChild(card);
+    });
+
+  } catch (err) {
+    statusText.innerText = `Failed to load /${TEST_FOLDER_NAME} folder. Ensure the repository has files inside /${TEST_FOLDER_NAME}.`;
+    console.error(err);
+  }
+}
