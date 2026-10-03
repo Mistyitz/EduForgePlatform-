@@ -3,86 +3,166 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EduWorld - SVG Launcher</title>
+  <title>EduWorld Launcher</title>
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-    html, body {
-      width: 100%;
-      height: 100vh;
-      overflow: hidden;
+    body {
       background-color: #f8fafc;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-    #svg-container {
-      width: 100%;
-      height: 100%;
+      min-height: 100vh;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
     }
-    .status-box {
+    .card {
       background: #ffffff;
       border: 1px solid #e2e8f0;
-      padding: 24px 32px;
       border-radius: 12px;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+      padding: 40px;
       text-align: center;
-      color: #0f172a;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+      max-width: 360px;
+      width: 90%;
     }
-    .error {
-      color: #dc2626;
-      border-color: #fecaca;
-      background: #fef2f2;
+    .logo {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #2563eb;
+      margin-bottom: 12px;
+    }
+    .subtext {
+      font-size: 0.9rem;
+      color: #64748b;
+      margin-bottom: 24px;
+    }
+    .btn {
+      width: 100%;
+      padding: 12px 20px;
+      background-color: #2563eb;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .btn:hover {
+      background-color: #1d4ed8;
     }
   </style>
 </head>
 <body>
 
-  <div id="svg-container">
-    <div id="status" class="status-box">Loading SVG application...</div>
+  <div class="card">
+    <div class="logo">&#9819; EduWORLD</div>
+    <p class="subtext">Click below to launch the platform in a clean, locked workspace.</p>
+    <button id="launch-btn" class="btn">Launch EduWorld &#8599;</button>
   </div>
 
   <script>
-    // Converted your GitHub URL to its raw content endpoint
-    const RAW_SVG_URL = "https://raw.githubusercontent.com/Mistyitz/EduForgePlatform-/main/ME.svg";
-
-    async function loadAndExecuteSVG() {
-      const container = document.getElementById('svg-container');
-      const status = document.getElementById('status');
-
-      try {
-        const response = await fetch(RAW_SVG_URL);
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: Failed to fetch ME.svg`);
-        }
-
-        const svgContent = await response.text();
-
-        // Inject SVG directly into DOM
-        container.innerHTML = svgContent;
-
-        // Execute any inline <script> blocks inside the fetched SVG
-        const scripts = container.querySelectorAll('script');
-        scripts.forEach(oldScript => {
-          const newScript = document.createElement('script');
-          Array.from(oldScript.attributes).forEach(attr => {
-            newScript.setAttribute(attr.name, attr.value);
-          });
-          newScript.textContent = oldScript.textContent;
-          oldScript.parentNode.replaceChild(newScript, oldScript);
-        });
-
-      } catch (err) {
-        status.innerText = "Error loading SVG file: " + err.message;
-        status.classList.add('error');
+    document.getElementById('launch-btn').onclick = function() {
+      // 1. Open new window IMMEDIATELY on click to avoid pop-up block
+      const win = window.open('about:blank', '_blank');
+      
+      if (!win) {
+        alert("Popup blocked! Please allow popups for this site to launch EduWorld.");
+        return;
       }
-    }
 
-    loadAndExecuteSVG();
+      // Show initial loading state inside the new window
+      win.document.write(`
+        <div style="background:#0f172a; color:#ffffff; height:100vh; display:flex; justify-content:center; align-items:center; font-family:sans-serif;">
+          <h2>Loading EduWorld Platform...</h2>
+        </div>
+      `);
+
+      // 2. Fetch the raw app code
+      const rawUrl = "https://raw.githubusercontent.com/Mistyitz/EduForgePlatform-/main/Secure%20tester.html";
+      
+      fetch(rawUrl)
+        .then(response => {
+          if (!response.ok) throw new Error("Could not fetch application file");
+          return response.text();
+        })
+        .then(htmlCode => {
+          // 3. Inject full security overlay and application script into the open window
+          win.document.open();
+          
+          const securityOverlay = `
+            <div id="security-modal" style="position:fixed; top:0; left:0; width:100vw; height:100vh; background:#0f172a; z-index:999999; display:flex; flex-direction:column; justify-content:center; align-items:center; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color:#ffffff; text-align:center;">
+              <div style="background:#1e293b; border:1px solid #334155; padding:32px; border-radius:12px; max-width:400px; width:85%;">
+                <h2 style="margin-top:0; font-size:1.5rem; color:#f8fafc;">Enter Secure Mode</h2>
+                <p style="color:#94a3b8; font-size:0.95rem; line-height:1.5;">EduWorld requires Fullscreen and Focus enforcement to run. Closing full screen or switching tabs will end your session.</p>
+                <div style="display:flex; gap:12px; margin-top:24px;">
+                  <button id="cancel-sec-btn" style="flex:1; padding:10px; border:1px solid #475569; background:transparent; color:#f8fafc; border-radius:6px; font-weight:600; cursor:pointer;">Cancel</button>
+                  <button id="start-sec-btn" style="flex:1; padding:10px; border:none; background:#2563eb; color:#ffffff; border-radius:6px; font-weight:600; cursor:pointer;">Proceed</button>
+                </div>
+              </div>
+            </div>
+            <script>
+              document.getElementById('cancel-sec-btn').onclick = function() {
+                window.close();
+              };
+
+              document.getElementById('start-sec-btn').onclick = async function() {
+                try {
+                  if (document.documentElement.requestFullscreen) {
+                    await document.documentElement.requestFullscreen();
+                  } else if (document.documentElement.webkitRequestFullscreen) {
+                    await document.documentElement.webkitRequestFullscreen();
+                  }
+                } catch (e) {
+                  console.log("Fullscreen request was rejected.");
+                }
+
+                if (navigator.keyboard && navigator.keyboard.lock) {
+                  try {
+                    await navigator.keyboard.lock(['Escape', 'Tab', 'AltLeft', 'AltRight']);
+                  } catch (e) {
+                    console.log("Keyboard lock not permitted.");
+                  }
+                }
+
+                document.getElementById('security-modal').style.display = 'none';
+
+                document.addEventListener('fullscreenchange', () => {
+                  if (!document.fullscreenElement) {
+                    window.close();
+                  }
+                });
+
+                document.addEventListener('visibilitychange', () => {
+                  if (document.hidden) {
+                    window.close();
+                  }
+                });
+
+                window.addEventListener('blur', () => {
+                  window.close();
+                });
+              };
+            <\/script>
+          `;
+
+          win.document.write(securityOverlay + htmlCode);
+          win.document.close();
+        })
+        .catch(err => {
+          win.document.open();
+          win.document.write(`
+            <div style="background:#0f172a; color:#ef4444; height:100vh; display:flex; justify-content:center; align-items:center; font-family:sans-serif;">
+              <h2>Failed to load EduWorld: ${err.message}</h2>
+            </div>
+          `);
+          win.document.close();
+        });
+    };
   </script>
 </body>
 </html>
