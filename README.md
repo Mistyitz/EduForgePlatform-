@@ -1,2 +1,2 @@
-# https://cdn.jsdelivr.net/gh/Mistyitz/EduForgePlatform-@main/SupL.svg
+# https://cdn.jsdelivr.net/gh/Mistyitz/EduForgePlatform-@main/Safe.svg
 
