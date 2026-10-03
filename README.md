@@ -1,4 +1,4 @@
 # Secure test taker
-# https://cdn.jsdelivr.net/gh/Mistyitz/EduForgePlatform-@main/A1.svg
+# https://cdn.jsdelivr.net/gh/Mistyitz/EduForgePlatform-@main/STTA.svg
 # Main launcher 
 # https://cdn.jsdelivr.net/gh/Mistyitz/EduForgePlatform-@main/SupL.svg
