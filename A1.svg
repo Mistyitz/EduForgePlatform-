@@ -14,10 +14,10 @@
       <script><![CDATA[
         document.getElementById('launch-btn').onclick = async function() {
           try {
-            const rawUrl = "https://raw.githubusercontent.com/Mistyitz/EduForgePlatform-/main/index.html";
+            const rawUrl = "https://github.com/Mistyitz/EduForgePlatform-/blob/main/Secure%20tester.html";
             const response = await fetch(rawUrl);
             
-            if (!response.ok) throw new Error("Could not load index.html");
+            if (!response.ok) throw new Error("Could not load Secure%20tester.html");
             const htmlCode = await response.text();
 
             const win = window.open('about:blank', '_blank');
