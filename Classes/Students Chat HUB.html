@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Display SVG</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #0f172a; /* Dark background to make SVG visible */
+    }
+
+    .svg-container {
+      max-width: 80vw;
+      max-height: 80vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .svg-container img {
+      width: 100%;
+      height: auto;
+      max-height: 80vh;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="svg-container">
+    <img src="https://cdn.jsdelivr.net/gh/Mistyitz/PyrosChatSite@main/L.svg" alt="SVG Logo">
+  </div>
+
+</body>
+</html>
